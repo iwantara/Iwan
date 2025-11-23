@@ -99,11 +99,11 @@ export const FolderCard: React.FC<FolderCardProps> = ({
   };
 
   return (
-    <div 
+    <div
       onClick={!isEditing ? onClick : undefined}
       className={`group relative rounded-[2rem] p-6 transition-all duration-300 backdrop-blur-sm border
         ${theme.colors.cardBg} ${theme.colors.cardBorder}
-        ${!isEditing ? 'hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5 cursor-pointer shadow-sm' : 'cursor-default ring-2 shadow-md'}
+        ${!isEditing ? 'hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 cursor-pointer shadow-md' : 'cursor-default ring-2 shadow-md'}
       `}
       style={{
         borderColor: isEditing ? 'var(--theme-color)' : '',
@@ -142,14 +142,14 @@ export const FolderCard: React.FC<FolderCardProps> = ({
                     <button
                       onClick={(e) => { e.stopPropagation(); onMove(e, 'up'); setShowMenu(false); }}
                       disabled={index === 0}
-                      className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl text-left disabled:opacity-30 disabled:hover:bg-transparent"
+                      className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl text-left disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                     >
                       <ChevronUp className="w-4 h-4" /> Geser Naik
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); onMove(e, 'down'); setShowMenu(false); }}
                       disabled={index === totalFolders - 1}
-                      className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl text-left disabled:opacity-30 disabled:hover:bg-transparent"
+                      className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl text-left disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                     >
                       <ChevronDown className="w-4 h-4" /> Geser Turun
                     </button>

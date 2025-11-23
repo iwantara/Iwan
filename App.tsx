@@ -423,8 +423,8 @@ const App: React.FC = () => {
 
   const Background = () => (
     <div className="fixed top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-       <div className={`absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full blur-[130px] mix-blend-multiply transition-colors duration-1000 opacity-60 ${theme.colors.blob1}`}></div>
-       <div className={`absolute top-[20%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[130px] mix-blend-multiply transition-colors duration-1000 opacity-60 ${theme.colors.blob2}`}></div>
+       <div className={`absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full blur-[130px] mix-blend-multiply transition-all duration-[1500ms] ease-in-out opacity-60 ${theme.colors.blob1}`}></div>
+       <div className={`absolute top-[20%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[130px] mix-blend-multiply transition-all duration-[1500ms] ease-in-out opacity-60 ${theme.colors.blob2}`}></div>
     </div>
   );
 
@@ -436,12 +436,12 @@ const App: React.FC = () => {
 
         {/* Backup Status Notification */}
         {backupStatus && (
-          <div className={`fixed top-4 right-4 z-[200] max-w-md animate-in slide-in-from-right fade-in ${
+          <div className={`fixed top-6 right-6 z-[200] max-w-md animate-in slide-in-from-right-5 fade-in duration-300 ${
             backupStatus.type === 'success'
               ? 'bg-green-500 text-white'
               : 'bg-red-500 text-white'
-          } rounded-lg shadow-lg p-4 flex items-start gap-3`}>
-            <div className="mt-0.5">
+          } rounded-2xl shadow-2xl shadow-black/20 p-5 flex items-start gap-3 border border-white/20`}>
+            <div className="mt-0.5 flex-shrink-0">
               {backupStatus.type === 'success' ? (
                 <Check className="w-5 h-5" />
               ) : (
@@ -449,7 +449,7 @@ const App: React.FC = () => {
               )}
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium whitespace-pre-line">{backupStatus.message}</p>
+              <p className="text-sm font-medium whitespace-pre-line leading-relaxed">{backupStatus.message}</p>
             </div>
           </div>
         )}
@@ -563,7 +563,7 @@ const App: React.FC = () => {
             />
             <button
               onClick={createFolder}
-              className={`${theme.colors.buttonTextColor} px-8 py-3 rounded-[1.5rem] font-bold tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:shadow-none disabled:translate-y-0 ${theme.colors.gradientFrom}`}
+              className={`${theme.colors.buttonTextColor} px-8 py-3 rounded-[1.5rem] font-bold tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:shadow-none disabled:translate-y-0 disabled:cursor-not-allowed ${theme.colors.gradientFrom}`}
               disabled={!newFolderName.trim()}
             >
               Buat
@@ -626,8 +626,8 @@ const App: React.FC = () => {
           {/* Folder Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 mt-10">
             {processedFolders.length === 0 ? (
-              <div className="col-span-full text-center py-20">
-                <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${theme.colors.cardBg} backdrop-blur-sm mb-6 shadow-sm border ${theme.colors.cardBorder}`}>
+              <div className="col-span-full text-center py-20 animate-in fade-in duration-500">
+                <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${theme.colors.cardBg} backdrop-blur-sm mb-6 shadow-sm border ${theme.colors.cardBorder} animate-pulse`}>
                    <FolderPlus className={`w-8 h-8 ${theme.colors.cardSubText}`} />
                 </div>
                 <h3 className={`text-xl font-bold mb-2 ${theme.colors.textColor}`}>
