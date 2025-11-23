@@ -203,13 +203,11 @@ export const FolderCard: React.FC<FolderCardProps> = ({
             {folder.name}
           </h3>
         )}
-        
-        {!showMenu && (
-          <p className={`${theme.colors.cardSubText} text-sm font-medium flex items-center gap-2 mt-2`}>
-            <span className={`w-2 h-2 rounded-full ${theme.colors.accent.replace('text-', 'bg-').replace('600', '500')}`}></span>
-            {itemCount} interest tersimpan
-          </p>
-        )}
+
+        <p className={`${theme.colors.cardSubText} text-sm font-medium flex items-center gap-2 mt-2 relative z-0`}>
+          <span className={`w-2 h-2 rounded-full ${theme.colors.accent.replace('text-', 'bg-').replace('600', '500')}`}></span>
+          {itemCount} interest tersimpan
+        </p>
       </div>
     </div>
   );
