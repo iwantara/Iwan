@@ -170,7 +170,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       </div>
       
       {/* Content */}
-      <div className="relative space-y-1">
+      <div className="relative space-y-1 z-0">
         {isEditing ? (
           <div className="flex gap-2 items-center">
             <input
