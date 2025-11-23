@@ -30,52 +30,52 @@ export const themes: Record<string, Theme> = {
   },
   royal: {
     name: 'royal',
-    label: 'Royal Blue',
+    label: 'Cool Slate',
     colors: {
-      primary: 'indigo',
-      secondary: 'blue',
-      accent: 'text-indigo-700',
-      
-      gradientFrom: 'bg-indigo-700',
-      gradientTo: 'to-indigo-700',
+      primary: 'slate',
+      secondary: 'gray',
+      accent: 'text-slate-700',
+
+      gradientFrom: 'bg-slate-700',
+      gradientTo: 'to-slate-700',
       buttonTextColor: 'text-white',
-      
-      pageBackground: 'bg-blue-900', 
+
+      pageBackground: 'bg-slate-800',
       textColor: 'text-white',
-      subText: 'text-blue-200',
-      
+      subText: 'text-slate-300',
+
       cardBg: 'bg-white',
-      cardBorder: 'border-blue-200',
-      cardTextColor: 'text-blue-950',
+      cardBorder: 'border-slate-200',
+      cardTextColor: 'text-slate-950',
       cardSubText: 'text-slate-500',
-      
-      blob1: 'bg-blue-600',
-      blob2: 'bg-indigo-600'
+
+      blob1: 'bg-slate-600',
+      blob2: 'bg-gray-600'
     }
   },
   cosmic: {
     name: 'cosmic',
-    label: 'Deep Space',
+    label: 'Warm Chocolate',
     colors: {
-      primary: 'purple',
-      secondary: 'fuchsia',
-      accent: 'text-purple-700',
-      
-      gradientFrom: 'bg-purple-700',
-      gradientTo: 'to-purple-700',
+      primary: 'amber',
+      secondary: 'stone',
+      accent: 'text-amber-800',
+
+      gradientFrom: 'bg-amber-700',
+      gradientTo: 'to-amber-700',
       buttonTextColor: 'text-white',
-      
-      pageBackground: 'bg-[#2e1065]', 
+
+      pageBackground: 'bg-amber-900',
       textColor: 'text-white',
-      subText: 'text-purple-200',
-      
+      subText: 'text-amber-200',
+
       cardBg: 'bg-white',
-      cardBorder: 'border-purple-200',
-      cardTextColor: 'text-purple-950',
+      cardBorder: 'border-amber-200',
+      cardTextColor: 'text-amber-950',
       cardSubText: 'text-slate-500',
-      
-      blob1: 'bg-purple-600',
-      blob2: 'bg-fuchsia-600'
+
+      blob1: 'bg-amber-700',
+      blob2: 'bg-stone-600'
     }
   },
   cherry: {
