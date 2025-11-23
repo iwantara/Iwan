@@ -110,14 +110,14 @@ export const FolderCard: React.FC<FolderCardProps> = ({
         ['--theme-color' as any]: theme.colors.primary // For inline styles fallback if needed
       }}
     >
-      <div className="flex justify-between items-start mb-6 relative z-10">
+      <div className="flex justify-between items-start mb-6 relative">
         {/* Icon */}
         <div className={`p-3.5 rounded-2xl transition-colors border bg-opacity-20 ${theme.colors.cardBorder} ${theme.colors.accent.replace('text-', 'bg-')}`}>
           <FolderIcon className={`w-8 h-8 ${theme.colors.accent}`} />
         </div>
         
         {/* Menu Button (Three Dots) */}
-        <div className="relative" ref={menuRef} onClick={(e) => e.stopPropagation()}>
+        <div className="relative z-50" ref={menuRef} onClick={(e) => e.stopPropagation()}>
           <button
             onClick={toggleMenu}
             className={`p-2 rounded-xl transition-colors ${showMenu ? 'bg-slate-200/50 text-current' : `${theme.colors.cardSubText} hover:text-current hover:bg-black/5`}`}
@@ -170,7 +170,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       </div>
       
       {/* Content */}
-      <div className="relative z-10 space-y-1">
+      <div className={`relative space-y-1 transition-opacity ${showMenu ? 'opacity-0 invisible' : 'opacity-100'}`}>
         {isEditing ? (
           <div className="flex gap-2 items-center">
             <input
@@ -185,13 +185,13 @@ export const FolderCard: React.FC<FolderCardProps> = ({
                   ['--tw-ring-color' as any]: `var(--${theme.colors.primary}-500)`
               }}
             />
-            <button 
+            <button
               onClick={handleSave}
               className="p-2 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 transition-colors border border-green-200/50"
             >
               <Check className="w-4 h-4" />
             </button>
-            <button 
+            <button
               onClick={handleCancel}
               className="p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors border border-red-200/50"
             >
@@ -203,8 +203,8 @@ export const FolderCard: React.FC<FolderCardProps> = ({
             {folder.name}
           </h3>
         )}
-        
-        <p className={`${theme.colors.cardSubText} text-sm font-medium flex items-center gap-2`}>
+
+        <p className={`${theme.colors.cardSubText} text-sm font-medium flex items-center gap-2 mt-2`}>
           <span className={`w-2 h-2 rounded-full ${theme.colors.accent.replace('text-', 'bg-').replace('600', '500')}`}></span>
           {itemCount} interest tersimpan
         </p>
