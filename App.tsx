@@ -516,17 +516,31 @@ const App: React.FC = () => {
                   <div className="absolute right-0 top-full mt-3 w-56 bg-white border border-slate-100 rounded-2xl shadow-xl shadow-slate-300/30 p-2 animate-in fade-in zoom-in-95 origin-top-right ring-1 ring-slate-100 z-[100]">
                     <span className="text-xs font-bold text-slate-400 px-3 py-2 block uppercase tracking-wider border-b border-slate-100 mb-1">Pilih Tema</span>
                     <div className="max-h-[300px] overflow-y-auto">
-                      {Object.values(themes).map((t) => (
-                        <button
-                          key={t.name}
-                          onClick={() => { setCurrentTheme(t.name); setShowThemeSelector(false); }}
-                          className={`w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium flex items-center gap-3 transition-colors ${currentTheme === t.name ? 'bg-slate-100 text-slate-900 ring-1 ring-slate-200' : 'text-slate-500 hover:bg-slate-50'}`}
-                        >
-                          <div className={`w-4 h-4 rounded-full shadow-sm`} style={{ backgroundColor: t.name === 'monochrome' ? '#000' : `var(--${t.colors.primary}-500, gray)` }}></div>
-                          {t.label}
-                          {currentTheme === t.name && <Check className="w-4 h-4 ml-auto text-slate-400" />}
-                        </button>
-                      ))}
+                      {Object.values(themes).map((t) => {
+                        const themeColors: Record<string, string> = {
+                          monochrome: '#000000',
+                          royal: '#475569',
+                          cosmic: '#57534e',
+                          cherry: '#dc2626',
+                          ocean: '#2563eb',
+                          nature: '#059669',
+                          sunset: '#ea580c',
+                          mint: '#0d9488',
+                          aurora: '#db2777',
+                          sunshine: '#eab308'
+                        };
+                        return (
+                          <button
+                            key={t.name}
+                            onClick={() => { setCurrentTheme(t.name); setShowThemeSelector(false); }}
+                            className={`w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium flex items-center gap-3 transition-colors ${currentTheme === t.name ? 'bg-slate-100 text-slate-900 ring-1 ring-slate-200' : 'text-slate-500 hover:bg-slate-50'}`}
+                          >
+                            <div className={`w-4 h-4 rounded-full shadow-sm`} style={{ backgroundColor: themeColors[t.name] || '#gray' }}></div>
+                            {t.label}
+                            {currentTheme === t.name && <Check className="w-4 h-4 ml-auto text-slate-400" />}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

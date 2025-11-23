@@ -57,25 +57,25 @@ export const themes: Record<string, Theme> = {
     name: 'cosmic',
     label: 'Warm Chocolate',
     colors: {
-      primary: 'amber',
-      secondary: 'stone',
-      accent: 'text-amber-800',
+      primary: 'stone',
+      secondary: 'neutral',
+      accent: 'text-stone-800',
 
-      gradientFrom: 'bg-amber-700',
-      gradientTo: 'to-amber-700',
+      gradientFrom: 'bg-stone-800',
+      gradientTo: 'to-stone-800',
       buttonTextColor: 'text-white',
 
-      pageBackground: 'bg-amber-900',
+      pageBackground: 'bg-[#3e2723]',
       textColor: 'text-white',
-      subText: 'text-amber-200',
+      subText: 'text-stone-300',
 
       cardBg: 'bg-white',
-      cardBorder: 'border-amber-200',
-      cardTextColor: 'text-amber-950',
-      cardSubText: 'text-slate-500',
+      cardBorder: 'border-stone-300',
+      cardTextColor: 'text-stone-950',
+      cardSubText: 'text-stone-600',
 
-      blob1: 'bg-amber-700',
-      blob2: 'bg-stone-600'
+      blob1: 'bg-stone-700',
+      blob2: 'bg-neutral-700'
     }
   },
   cherry: {
