@@ -205,21 +205,28 @@ const App: React.FC = () => {
     const file = fileInput.files?.[0];
 
     if (!file) {
+      console.log('No file selected');
       return;
     }
 
+    console.log('File selected:', file.name);
+
     try {
       const text = await file.text();
+      console.log('File content read, length:', text.length);
       let parsedData;
 
       try {
         parsedData = JSON.parse(text);
+        console.log('JSON parsed successfully:', parsedData);
       } catch (err) {
         throw new Error("File rusak atau bukan format JSON yang valid.");
       }
 
       // Validasi backup data (now auto-heals bad data)
+      console.log('Validating backup data...');
       const validation = validateBackupData(parsedData);
+      console.log('Validation result:', validation);
 
       if (!validation.valid || !validation.data) {
         throw new Error(validation.error || "Data backup tidak valid");
@@ -230,6 +237,7 @@ const App: React.FC = () => {
 
       // Cek jika backup kosong
       if (stats && stats.foldersCount === 0 && stats.itemsCount === 0) {
+        console.log('Backup is empty, showing confirmation...');
         const emptyConfirm = window.confirm(
           '⚠️ BACKUP KOSONG\n\n' +
           'File backup ini tidak mengandung data apapun.\n' +
@@ -237,9 +245,11 @@ const App: React.FC = () => {
           'Apakah Anda yakin ingin melanjutkan?'
         );
         if (!emptyConfirm) {
+          console.log('Empty backup cancelled by user');
           fileInput.value = '';
           return;
         }
+        console.log('User confirmed empty backup restore');
       }
 
       // Buat pesan konfirmasi dengan detail
@@ -258,11 +268,21 @@ const App: React.FC = () => {
 
       confirmMessage += `\n🔄 Data yang ada saat ini akan DIGANTI dengan data backup ini.\n\nApakah Anda yakin?`;
 
-      if (window.confirm(confirmMessage)) {
+      console.log('Showing confirmation dialog...');
+      const confirmed = window.confirm(confirmMessage);
+      console.log('User confirmation:', confirmed);
+
+      if (confirmed) {
+        console.log('Restoring data...');
+        console.log('Folders to restore:', backupData.folders);
+        console.log('Items to restore:', backupData.savedItems);
+
         // Update state
         setFolders(backupData.folders);
         setSavedItems(backupData.savedItems);
         setCurrentTheme(backupData.currentTheme);
+
+        console.log('State updated, resetting active folder...');
 
         // Reset active folder to avoid showing a deleted folder
         setActiveFolderId(null);

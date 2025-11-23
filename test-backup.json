@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "timestamp": 1732361000000,
+  "folders": [
+    {
+      "id": "folder-1",
+      "name": "Test Folder 1",
+      "createdAt": 1732361000000
+    },
+    {
+      "id": "folder-2",
+      "name": "Test Folder 2",
+      "createdAt": 1732361100000
+    }
+  ],
+  "savedItems": [
+    {
+      "id": "item-1",
+      "folderId": "folder-1",
+      "interestName": "Test Interest 1",
+      "timestamp": 1732361200000
+    },
+    {
+      "id": "item-2",
+      "folderId": "folder-1",
+      "interestName": "Test Interest 2",
+      "timestamp": 1732361300000
+    },
+    {
+      "id": "item-3",
+      "folderId": "folder-2",
+      "interestName": "Test Interest 3",
+      "timestamp": 1732361400000
+    }
+  ],
+  "currentTheme": "cosmic"
+}
