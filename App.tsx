@@ -4,8 +4,9 @@ import { themes } from './data/themes';
 import { Button } from './components/Button';
 import { FolderCard } from './components/FolderCard';
 import { SavedItemCard } from './components/SavedItemCard';
-import { Sparkles, RefreshCw, Copy, Check, FolderPlus, ArrowLeft, Search, ArrowUpDown, Palette, Settings, Download, Upload } from 'lucide-react';
+import { Sparkles, RefreshCw, Copy, Check, FolderPlus, ArrowLeft, Search, ArrowUpDown, Palette, Settings, Download, Upload, AlertCircle } from 'lucide-react';
 import { Folder, SavedItem, ThemeName } from './types';
+import { createBackupData, generateBackupFilename, formatBackupDate, validateBackupData } from './utils/backupRestore';
 
 // Helper hook for clicking outside
 function useOnClickOutside(ref: React.RefObject<HTMLElement | null>, handler: (event: MouseEvent | TouchEvent) => void) {
@@ -90,24 +91,35 @@ const App: React.FC = () => {
   const theme = themes[currentTheme] || themes.cosmic;
 
   // --- Backup & Restore Logic ---
+  const [backupStatus, setBackupStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
   const handleExport = () => {
-    const data = {
-      version: 1,
-      timestamp: Date.now(),
-      folders,
-      savedItems,
-      currentTheme
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `koleksi-interest-${new Date().toISOString().slice(0, 10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    setShowSettings(false);
+    try {
+      const backupData = createBackupData(folders, savedItems, currentTheme);
+      const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = generateBackupFilename(backupData.timestamp);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      // Tampilkan feedback
+      setBackupStatus({
+        type: 'success',
+        message: `Backup berhasil! File: ${generateBackupFilename(backupData.timestamp)}`
+      });
+      setTimeout(() => setBackupStatus(null), 4000);
+      setShowSettings(false);
+    } catch (error) {
+      setBackupStatus({
+        type: 'error',
+        message: `Gagal membuat backup: ${error instanceof Error ? error.message : String(error)}`
+      });
+      setTimeout(() => setBackupStatus(null), 4000);
+    }
   };
 
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,49 +132,51 @@ const App: React.FC = () => {
 
     try {
       const text = await file.text();
-      let data;
+      let parsedData;
+
+      // Parse JSON
       try {
-        data = JSON.parse(text);
+        parsedData = JSON.parse(text);
       } catch (err) {
         throw new Error("File rusak atau bukan format JSON yang valid.");
       }
-      
-      // Validasi dasar struktur
-      if (!data || typeof data !== 'object') {
-         throw new Error("Struktur file tidak valid.");
+
+      // Validasi backup data dengan strict checking
+      const validation = validateBackupData(parsedData);
+      if (!validation.valid) {
+        throw new Error(validation.error || "Data backup tidak valid");
       }
 
-      const hasFolders = Array.isArray(data.folders);
-      const hasItems = Array.isArray(data.savedItems);
+      const backupData = validation.data!;
+      const confirmMessage = `Ditemukan Backup:\n\nTanggal: ${formatBackupDate(backupData.timestamp)}\nFolder: ${backupData.folders.length}\nItems: ${backupData.savedItems.length}\n\n⚠️ Data yang ada saat ini akan DIGANTI dengan data backup ini.\n\nApakah Anda yakin?`;
 
-      if (!hasFolders && !hasItems) {
-        throw new Error("File ini tidak berisi data folder atau interest yang valid.");
-      }
-
-      const confirmMessage = `Ditemukan Backup:\nTanggal: ${data.timestamp ? new Date(data.timestamp).toLocaleDateString() : 'Tidak diketahui'}\nFolder: ${data.folders?.length || 0}\nItems: ${data.savedItems?.length || 0}\n\nApakah Anda yakin ingin me-restore data ini? Data yang ada saat ini akan TIMPA (diganti).`;
-      
       if (window.confirm(confirmMessage)) {
-        // Force update localStorage immediately to prevent sync issues
-        if (hasFolders) {
-          setFolders(data.folders);
-          localStorage.setItem('rip_folders', JSON.stringify(data.folders));
-        }
-        
-        if (hasItems) {
-          setSavedItems(data.savedItems);
-          localStorage.setItem('rip_items', JSON.stringify(data.savedItems));
-        }
-        
-        if (data.currentTheme && themes[data.currentTheme]) {
-          setCurrentTheme(data.currentTheme);
-          localStorage.setItem('rip_theme', data.currentTheme);
-        }
+        // Update state
+        setFolders(backupData.folders);
+        setSavedItems(backupData.savedItems);
+        setCurrentTheme(backupData.currentTheme);
 
-        alert('Data berhasil dipulihkan!');
+        // Force update localStorage immediately
+        localStorage.setItem('rip_folders', JSON.stringify(backupData.folders));
+        localStorage.setItem('rip_items', JSON.stringify(backupData.savedItems));
+        localStorage.setItem('rip_theme', backupData.currentTheme);
+
+        // Reset active folder
+        setActiveFolderId(null);
+
+        setBackupStatus({
+          type: 'success',
+          message: 'Data berhasil dipulihkan! Backup diterapkan ke semua folder dan items.'
+        });
+        setTimeout(() => setBackupStatus(null), 4000);
       }
     } catch (error) {
       console.error("Import Error:", error);
-      alert('Gagal memproses file backup: ' + (error instanceof Error ? error.message : String(error)));
+      setBackupStatus({
+        type: 'error',
+        message: 'Gagal memproses file backup: ' + (error instanceof Error ? error.message : String(error))
+      });
+      setTimeout(() => setBackupStatus(null), 4000);
     } finally {
       setShowSettings(false);
       // Reset input agar user bisa memilih file yang sama lagi
@@ -301,6 +315,26 @@ const App: React.FC = () => {
     return (
       <div className={`min-h-screen w-full flex flex-col items-center relative p-6 font-sans transition-colors duration-700 ${theme.colors.pageBackground} ${theme.colors.textColor}`}>
         <Background />
+
+        {/* Backup Status Notification */}
+        {backupStatus && (
+          <div className={`fixed top-4 right-4 z-[200] max-w-sm animate-in slide-in-from-right fade-in ${
+            backupStatus.type === 'success'
+              ? 'bg-green-500 text-white'
+              : 'bg-red-500 text-white'
+          } rounded-lg shadow-lg p-4 flex items-start gap-3`}>
+            <div className="mt-0.5">
+              {backupStatus.type === 'success' ? (
+                <Check className="w-5 h-5" />
+              ) : (
+                <AlertCircle className="w-5 h-5" />
+              )}
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium">{backupStatus.message}</p>
+            </div>
+          </div>
+        )}
 
         {/* Top Header */}
         <div className="z-50 w-full max-w-5xl flex justify-between items-start pt-4 mb-8 relative">
