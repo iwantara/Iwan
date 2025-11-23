@@ -9,18 +9,18 @@ export interface AIResponse {
   fact: string;
 }
 
-export interface Folder {
-  id: string;
-  name: string;
-  createdAt: number;
-}
-
 export interface SavedItem {
   id: string;
   folderId: string;
   interestName: string;
   funFact?: string;
   timestamp: number;
+}
+
+export interface Folder {
+  id: string;
+  name: string;
+  createdAt: number;
 }
 
 export type ThemeName = 'cosmic' | 'ocean' | 'nature' | 'sunset' | 'monochrome' | 'aurora' | 'mint' | 'cherry' | 'sunshine' | 'royal';
