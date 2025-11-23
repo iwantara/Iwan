@@ -1,0 +1,5 @@
+{
+  "name": "Random Interest Picker",
+  "description": "A simple application to randomly select an interest from a curated list, enhanced with AI-generated fun facts.",
+  "requestFramePermissions": []
+}
