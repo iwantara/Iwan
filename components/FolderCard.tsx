@@ -127,41 +127,41 @@ export const FolderCard: React.FC<FolderCardProps> = ({
 
           {/* Dropdown Menu - Always White for clarity */}
           {showMenu && (
-            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-xl shadow-slate-500/10 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-100 origin-top-right">
-              <div className="p-1.5 flex flex-col gap-0.5">
+            <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-slate-200 rounded-2xl shadow-2xl shadow-slate-900/20 z-[100] overflow-hidden animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+              <div className="p-2 flex flex-col gap-1">
                 <button
                   onClick={startEditing}
-                  className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-xl text-left transition-colors hover:text-slate-900"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-xl text-left transition-colors hover:text-slate-900"
                 >
                   <Pencil className="w-4 h-4" /> Ubah Nama
                 </button>
-                
+
                 {allowManualSort && (
                   <>
-                    <div className="h-px bg-slate-100 my-1 mx-2"></div>
+                    <div className="h-px bg-slate-200 my-1 mx-2"></div>
                     <button
                       onClick={(e) => { e.stopPropagation(); onMove(e, 'up'); setShowMenu(false); }}
                       disabled={index === 0}
-                      className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl text-left disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 rounded-xl text-left disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                     >
                       <ChevronUp className="w-4 h-4" /> Geser Naik
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); onMove(e, 'down'); setShowMenu(false); }}
                       disabled={index === totalFolders - 1}
-                      className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl text-left disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 rounded-xl text-left disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                     >
                       <ChevronDown className="w-4 h-4" /> Geser Turun
                     </button>
                   </>
                 )}
-                
-                <div className="h-px bg-slate-100 my-1 mx-2"></div>
+
+                <div className="h-px bg-slate-200 my-1 mx-2"></div>
                 <button
                   onClick={handleDelete}
-                  className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-red-500 hover:text-red-600 hover:bg-red-50 rounded-xl text-left transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-white bg-red-500 hover:bg-red-600 rounded-xl text-left transition-all shadow-sm hover:shadow-md"
                 >
-                  <Trash2 className="w-4 h-4" /> Hapus
+                  <Trash2 className="w-4 h-4" /> Hapus Folder
                 </button>
               </div>
             </div>
