@@ -1,9 +1,6 @@
 
 import { Theme } from '../types';
 
-// Helper: Kita gunakan properti gradientFrom/To sekarang sebagai warna SOLID (awal dan akhir sama)
-// agar tidak perlu mengubah struktur Typescript, tapi efek visualnya solid.
-
 export const themes: Record<string, Theme> = {
   monochrome: {
     name: 'monochrome',
@@ -11,21 +8,20 @@ export const themes: Record<string, Theme> = {
     colors: {
       primary: 'neutral',
       secondary: 'stone',
-      accent: 'text-white', // Aksen Putih Solid
+      accent: 'text-white',
       
-      // Gunakan warna solid untuk tombol
-      gradientFrom: 'from-neutral-100', // Tombol jadi terang/putih di tema gelap
-      gradientTo: 'to-neutral-200',
+      // Tombol PUTIH di atas Background Hitam / Kartu Hitam
+      gradientFrom: 'bg-white', 
+      gradientTo: 'to-white',
+      buttonTextColor: 'text-black', // Teks Hitam agar terbaca di tombol putih
       
-      // HITAM PEKAT
       pageBackground: 'bg-black', 
       textColor: 'text-white',
       subText: 'text-neutral-400',
       
-      // Kartu Gelap
       cardBg: 'bg-neutral-900',
       cardBorder: 'border-neutral-800',
-      cardTextColor: 'text-white', // Text di dalam kartu putih
+      cardTextColor: 'text-white',
       cardSubText: 'text-neutral-400',
       
       blob1: 'bg-neutral-800/30',
@@ -38,18 +34,16 @@ export const themes: Record<string, Theme> = {
     colors: {
       primary: 'indigo',
       secondary: 'blue',
-      accent: 'text-indigo-700', // Solid Dark Blue text
+      accent: 'text-indigo-700',
       
-      // Tombol Solid Biru
-      gradientFrom: 'from-indigo-700',
+      gradientFrom: 'bg-indigo-700',
       gradientTo: 'to-indigo-700',
+      buttonTextColor: 'text-white',
       
-      // BACKGROUND BIRU PEKAT
       pageBackground: 'bg-blue-900', 
       textColor: 'text-white',
       subText: 'text-blue-200',
       
-      // KARTU PUTIH (Konsisten dengan tema lain)
       cardBg: 'bg-white',
       cardBorder: 'border-blue-200',
       cardTextColor: 'text-blue-950',
@@ -65,18 +59,16 @@ export const themes: Record<string, Theme> = {
     colors: {
       primary: 'purple',
       secondary: 'fuchsia',
-      accent: 'text-purple-700', // Solid Purple Text
+      accent: 'text-purple-700',
       
-      // Tombol Solid Ungu
-      gradientFrom: 'from-purple-700',
+      gradientFrom: 'bg-purple-700',
       gradientTo: 'to-purple-700',
+      buttonTextColor: 'text-white',
       
-      // BACKGROUND UNGU PEKAT
-      pageBackground: 'bg-[#2e1065]', // Violet-950
+      pageBackground: 'bg-[#2e1065]', 
       textColor: 'text-white',
       subText: 'text-purple-200',
       
-      // KARTU PUTIH (Agar jelas)
       cardBg: 'bg-white',
       cardBorder: 'border-purple-200',
       cardTextColor: 'text-purple-950',
@@ -94,10 +86,11 @@ export const themes: Record<string, Theme> = {
       secondary: 'rose',
       accent: 'text-red-600', 
       
-      gradientFrom: 'from-red-600',
+      gradientFrom: 'bg-red-600',
       gradientTo: 'to-red-600',
+      buttonTextColor: 'text-white',
       
-      pageBackground: 'bg-red-700', // Sedikit lebih gelap agar teks putih jelas
+      pageBackground: 'bg-red-700', 
       textColor: 'text-white',
       subText: 'text-red-100',
       
@@ -118,8 +111,9 @@ export const themes: Record<string, Theme> = {
       secondary: 'sky',
       accent: 'text-blue-600',
       
-      gradientFrom: 'from-blue-600',
+      gradientFrom: 'bg-blue-600',
       gradientTo: 'to-blue-600',
+      buttonTextColor: 'text-white',
       
       pageBackground: 'bg-blue-600',
       textColor: 'text-white',
@@ -142,8 +136,9 @@ export const themes: Record<string, Theme> = {
       secondary: 'green',
       accent: 'text-emerald-600',
       
-      gradientFrom: 'from-emerald-600',
+      gradientFrom: 'bg-emerald-600',
       gradientTo: 'to-emerald-600',
+      buttonTextColor: 'text-white',
       
       pageBackground: 'bg-emerald-700',
       textColor: 'text-white',
@@ -166,8 +161,9 @@ export const themes: Record<string, Theme> = {
       secondary: 'red',
       accent: 'text-orange-600',
       
-      gradientFrom: 'from-orange-600',
+      gradientFrom: 'bg-orange-600',
       gradientTo: 'to-orange-600',
+      buttonTextColor: 'text-white',
       
       pageBackground: 'bg-orange-600',
       textColor: 'text-white',
@@ -190,8 +186,9 @@ export const themes: Record<string, Theme> = {
       secondary: 'emerald',
       accent: 'text-teal-600',
       
-      gradientFrom: 'from-teal-600',
+      gradientFrom: 'bg-teal-600',
       gradientTo: 'to-teal-600',
+      buttonTextColor: 'text-white',
       
       pageBackground: 'bg-teal-600',
       textColor: 'text-white',
@@ -214,8 +211,9 @@ export const themes: Record<string, Theme> = {
       secondary: 'purple',
       accent: 'text-pink-600',
       
-      gradientFrom: 'from-pink-600',
+      gradientFrom: 'bg-pink-600',
       gradientTo: 'to-pink-600',
+      buttonTextColor: 'text-white',
       
       pageBackground: 'bg-pink-600',
       textColor: 'text-white',
@@ -238,8 +236,11 @@ export const themes: Record<string, Theme> = {
       secondary: 'orange',
       accent: 'text-yellow-700',
       
-      gradientFrom: 'from-yellow-500',
-      gradientTo: 'to-yellow-500',
+      // Kuning agak gelap sedikit agar beda dengan background putih kartu, 
+      // tapi teksnya HARUS GELAP (coklat tua) agar terbaca.
+      gradientFrom: 'bg-yellow-400', 
+      gradientTo: 'to-yellow-400',
+      buttonTextColor: 'text-yellow-950', 
       
       pageBackground: 'bg-yellow-500',
       textColor: 'text-white',

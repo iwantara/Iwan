@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { interests } from './data/interests';
 import { themes } from './data/themes';
@@ -395,9 +396,10 @@ const App: React.FC = () => {
               onChange={(e) => setNewFolderName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && createFolder()}
             />
+            {/* Tombol Buat: Selalu Putih (bg-white) dengan teks gelap (slate-900) agar kontras di semua background berwarna */}
             <button 
               onClick={createFolder}
-              className={`text-white px-8 py-3 rounded-[1.5rem] font-bold tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:shadow-none disabled:translate-y-0 ${theme.colors.gradientFrom}`}
+              className={`bg-white text-slate-900 px-8 py-3 rounded-[1.5rem] font-bold tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:shadow-none disabled:translate-y-0`}
               disabled={!newFolderName.trim()}
             >
               Buat

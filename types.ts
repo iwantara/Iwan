@@ -32,8 +32,10 @@ export interface Theme {
     primary: string; // e.g., 'indigo'
     secondary: string; // e.g., 'purple'
     accent: string; // Used for icons/rings
-    gradientFrom: string;
-    gradientTo: string;
+    gradientFrom: string; // Used for BUTTON BACKGROUND (Solid color now)
+    gradientTo: string; // Unused but kept for type compatibility if needed
+    
+    buttonTextColor: string; // NEW: Specific text color for the primary button
     
     // Background Utama (Halaman)
     pageBackground: string; // Full page bold background
