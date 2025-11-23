@@ -170,7 +170,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       </div>
       
       {/* Content */}
-      <div className="relative z-10 space-y-1">
+      <div className="relative space-y-1">
         {isEditing ? (
           <div className="flex gap-2 items-center">
             <input
@@ -204,7 +204,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
           </h3>
         )}
 
-        <p className={`${theme.colors.cardSubText} text-sm font-medium flex items-center gap-2 mt-2 relative z-0`}>
+        <p className={`${theme.colors.cardSubText} text-sm font-medium flex items-center gap-2 mt-2`}>
           <span className={`w-2 h-2 rounded-full ${theme.colors.accent.replace('text-', 'bg-').replace('600', '500')}`}></span>
           {itemCount} interest tersimpan
         </p>
