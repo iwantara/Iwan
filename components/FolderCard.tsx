@@ -117,7 +117,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
         </div>
         
         {/* Menu Button (Three Dots) */}
-        <div className="relative" ref={menuRef} onClick={(e) => e.stopPropagation()}>
+        <div className="relative z-50" ref={menuRef} onClick={(e) => e.stopPropagation()}>
           <button
             onClick={toggleMenu}
             className={`p-2 rounded-xl transition-colors ${showMenu ? 'bg-slate-200/50 text-current' : `${theme.colors.cardSubText} hover:text-current hover:bg-black/5`}`}
