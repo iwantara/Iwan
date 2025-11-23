@@ -170,7 +170,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       </div>
       
       {/* Content */}
-      <div className="relative space-y-1 z-0">
+      <div className={`relative space-y-1 transition-opacity ${showMenu ? 'opacity-0 invisible' : 'opacity-100'}`}>
         {isEditing ? (
           <div className="flex gap-2 items-center">
             <input
@@ -185,13 +185,13 @@ export const FolderCard: React.FC<FolderCardProps> = ({
                   ['--tw-ring-color' as any]: `var(--${theme.colors.primary}-500)`
               }}
             />
-            <button 
+            <button
               onClick={handleSave}
               className="p-2 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 transition-colors border border-green-200/50"
             >
               <Check className="w-4 h-4" />
             </button>
-            <button 
+            <button
               onClick={handleCancel}
               className="p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors border border-red-200/50"
             >
