@@ -110,7 +110,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
         ['--theme-color' as any]: theme.colors.primary // For inline styles fallback if needed
       }}
     >
-      <div className="flex justify-between items-start mb-6 relative z-10">
+      <div className="flex justify-between items-start mb-6 relative">
         {/* Icon */}
         <div className={`p-3.5 rounded-2xl transition-colors border bg-opacity-20 ${theme.colors.cardBorder} ${theme.colors.accent.replace('text-', 'bg-')}`}>
           <FolderIcon className={`w-8 h-8 ${theme.colors.accent}`} />
