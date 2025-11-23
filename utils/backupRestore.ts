@@ -8,11 +8,28 @@ export interface BackupData {
   currentTheme: ThemeName;
 }
 
+export interface ValidationResult {
+  valid: boolean;
+  error?: string;
+  data?: BackupData;
+  warnings?: string[];
+  stats?: {
+    foldersCount: number;
+    itemsCount: number;
+    recoveredFolders: number;
+    recoveredItems: number;
+  };
+}
+
 /**
  * Validasi dan Sanitasi Data Backup
  * Fungsi ini tidak hanya mengecek validitas, tapi mencoba memperbaiki data yang kurang lengkap (legacy data).
  */
-export function validateBackupData(data: any): { valid: boolean; error?: string; data?: BackupData } {
+export function validateBackupData(data: any): ValidationResult {
+  const warnings: string[] = [];
+  let recoveredFolders = 0;
+  let recoveredItems = 0;
+
   try {
     // 1. Cek struktur dasar
     if (!data || typeof data !== 'object') {
@@ -22,26 +39,49 @@ export function validateBackupData(data: any): { valid: boolean; error?: string;
     // 2. Sanitasi Folders
     // Jika data folder rusak atau tidak ada, kita buat array kosong
     let sanitizedFolders: Folder[] = [];
+    const originalFoldersCount = Array.isArray(data.folders) ? data.folders.length : 0;
+
     if (Array.isArray(data.folders)) {
       sanitizedFolders = data.folders
         .filter((f: any) => f && typeof f.id === 'string' && typeof f.name === 'string') // Filter item sampah
-        .map((f: any) => ({
-          id: f.id,
-          name: f.name,
-          createdAt: typeof f.createdAt === 'number' ? f.createdAt : Date.now() // Patch createdAt jika hilang
-        }));
+        .map((f: any) => {
+          const needsRecovery = typeof f.createdAt !== 'number';
+          if (needsRecovery) {
+            recoveredFolders++;
+            warnings.push(`Folder "${f.name}" dipulihkan (timestamp hilang)`);
+          }
+          return {
+            id: f.id,
+            name: f.name,
+            createdAt: typeof f.createdAt === 'number' ? f.createdAt : Date.now() // Patch createdAt jika hilang
+          };
+        });
+
+      const invalidFolders = originalFoldersCount - sanitizedFolders.length;
+      if (invalidFolders > 0) {
+        warnings.push(`${invalidFolders} folder rusak dan dibuang`);
+      }
     }
 
     // 3. Sanitasi SavedItems
     let sanitizedItems: SavedItem[] = [];
+    const originalItemsCount = Array.isArray(data.savedItems) ? data.savedItems.length : 0;
+
     if (Array.isArray(data.savedItems)) {
       sanitizedItems = data.savedItems
         .filter((i: any) => i && typeof i.id === 'string' && typeof i.interestName === 'string')
         .map((i: any) => {
+          let needsRecovery = false;
+
           // Tentukan folderId. Jika tidak ada (data lama), gunakan folder pertama yang tersedia atau ID sementara
           const targetFolderId = (typeof i.folderId === 'string' && i.folderId.length > 0)
-            ? i.folderId 
+            ? i.folderId
             : (sanitizedFolders.length > 0 ? sanitizedFolders[0].id : 'restored_default');
+
+          if (!i.folderId || !i.timestamp) {
+            needsRecovery = true;
+            recoveredItems++;
+          }
 
           return {
             id: i.id,
@@ -51,6 +91,11 @@ export function validateBackupData(data: any): { valid: boolean; error?: string;
             funFact: typeof i.funFact === 'string' ? i.funFact : undefined
           };
         });
+
+      const invalidItems = originalItemsCount - sanitizedItems.length;
+      if (invalidItems > 0) {
+        warnings.push(`${invalidItems} item rusak dan dibuang`);
+      }
     }
 
     // 4. Integrity Check: Pastikan item punya rumah (Folder)
@@ -62,20 +107,28 @@ export function validateBackupData(data: any): { valid: boolean; error?: string;
         createdAt: Date.now()
       };
       sanitizedFolders.push(recoveryFolder);
-      // Update item yang orphaned ke folder ini
-      sanitizedItems = sanitizedItems.map(i => 
-        i.folderId === 'restored_default' ? i : { ...i, folderId: recoveryFolder.id }
-      );
-    } 
+      warnings.push(`Folder darurat "${recoveryFolder.name}" dibuat untuk menampung ${sanitizedItems.length} item`);
+
+      // Semua item harus masuk ke folder recovery ini
+      sanitizedItems = sanitizedItems.map(i => ({
+        ...i,
+        folderId: recoveryFolder.id
+      }));
+    }
     // Jika item menunjuk ke folder yang tidak ada di list folder
     else if (sanitizedFolders.length > 0) {
        const folderIds = new Set(sanitizedFolders.map(f => f.id));
+       let orphanedCount = 0;
        sanitizedItems = sanitizedItems.map(i => {
          if (!folderIds.has(i.folderId)) {
+           orphanedCount++;
            return { ...i, folderId: sanitizedFolders[0].id }; // Pindahkan ke folder pertama
          }
          return i;
        });
+       if (orphanedCount > 0) {
+         warnings.push(`${orphanedCount} item dipindahkan ke folder "${sanitizedFolders[0].name}" (folder asli tidak ditemukan)`);
+       }
     }
 
     // 5. Sanitasi Theme
@@ -83,6 +136,11 @@ export function validateBackupData(data: any): { valid: boolean; error?: string;
     let theme: ThemeName = 'monochrome';
     if (data.currentTheme && validThemes.includes(data.currentTheme)) {
       theme = data.currentTheme as ThemeName;
+    }
+
+    // 6. Peringatan untuk backup kosong
+    if (sanitizedFolders.length === 0 && sanitizedItems.length === 0) {
+      warnings.push('⚠️ Backup ini tidak mengandung data apapun');
     }
 
     return {
@@ -93,6 +151,13 @@ export function validateBackupData(data: any): { valid: boolean; error?: string;
         folders: sanitizedFolders,
         savedItems: sanitizedItems,
         currentTheme: theme
+      },
+      warnings: warnings.length > 0 ? warnings : undefined,
+      stats: {
+        foldersCount: sanitizedFolders.length,
+        itemsCount: sanitizedItems.length,
+        recoveredFolders,
+        recoveredItems
       }
     };
 

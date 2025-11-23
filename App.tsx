@@ -155,6 +155,20 @@ const App: React.FC = () => {
   const handleExport = () => {
     try {
       const backupData = createBackupData(folders, savedItems, currentTheme);
+
+      // Cek jika data kosong
+      if (folders.length === 0 && savedItems.length === 0) {
+        const confirmEmpty = window.confirm(
+          '⚠️ DATA KOSONG\n\n' +
+          'Anda belum memiliki data apapun untuk di-backup.\n' +
+          'Apakah Anda tetap ingin membuat file backup kosong?'
+        );
+        if (!confirmEmpty) {
+          setShowSettings(false);
+          return;
+        }
+      }
+
       const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -165,16 +179,22 @@ const App: React.FC = () => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
+      // Pesan sukses yang lebih informatif
+      let successMessage = `✅ Backup berhasil!\n\n`;
+      successMessage += `📁 ${folders.length} folder\n`;
+      successMessage += `📌 ${savedItems.length} items\n\n`;
+      successMessage += `📄 File: ${generateBackupFilename(backupData.timestamp)}`;
+
       setBackupStatus({
         type: 'success',
-        message: `Backup berhasil! File: ${generateBackupFilename(backupData.timestamp)}`
+        message: successMessage
       });
-      setTimeout(() => setBackupStatus(null), 4000);
+      setTimeout(() => setBackupStatus(null), 5000);
       setShowSettings(false);
     } catch (error) {
       setBackupStatus({
         type: 'error',
-        message: `Gagal membuat backup: ${error instanceof Error ? error.message : String(error)}`
+        message: `❌ Gagal membuat backup: ${error instanceof Error ? error.message : String(error)}`
       });
       setTimeout(() => setBackupStatus(null), 4000);
     }
@@ -200,13 +220,43 @@ const App: React.FC = () => {
 
       // Validasi backup data (now auto-heals bad data)
       const validation = validateBackupData(parsedData);
-      
+
       if (!validation.valid || !validation.data) {
         throw new Error(validation.error || "Data backup tidak valid");
       }
 
       const backupData = validation.data;
-      const confirmMessage = `Ditemukan Backup:\n\nTanggal: ${formatBackupDate(backupData.timestamp)}\nFolder: ${backupData.folders.length}\nItems: ${backupData.savedItems.length}\n\n⚠️ Data yang ada saat ini akan DIGANTI dengan data backup ini.\n\nApakah Anda yakin?`;
+      const stats = validation.stats;
+
+      // Cek jika backup kosong
+      if (stats && stats.foldersCount === 0 && stats.itemsCount === 0) {
+        const emptyConfirm = window.confirm(
+          '⚠️ BACKUP KOSONG\n\n' +
+          'File backup ini tidak mengandung data apapun.\n' +
+          'Jika Anda lanjutkan, semua data yang ada sekarang akan DIHAPUS.\n\n' +
+          'Apakah Anda yakin ingin melanjutkan?'
+        );
+        if (!emptyConfirm) {
+          fileInput.value = '';
+          return;
+        }
+      }
+
+      // Buat pesan konfirmasi dengan detail
+      let confirmMessage = `📦 BACKUP DITEMUKAN\n\n`;
+      confirmMessage += `📅 Tanggal: ${formatBackupDate(backupData.timestamp)}\n`;
+      confirmMessage += `📁 Folder: ${stats?.foldersCount || 0}\n`;
+      confirmMessage += `📌 Items: ${stats?.itemsCount || 0}\n`;
+
+      // Tambahkan peringatan jika ada
+      if (validation.warnings && validation.warnings.length > 0) {
+        confirmMessage += `\n⚠️ PERINGATAN:\n`;
+        validation.warnings.forEach(w => {
+          confirmMessage += `• ${w}\n`;
+        });
+      }
+
+      confirmMessage += `\n🔄 Data yang ada saat ini akan DIGANTI dengan data backup ini.\n\nApakah Anda yakin?`;
 
       if (window.confirm(confirmMessage)) {
         // Update state
@@ -217,17 +267,32 @@ const App: React.FC = () => {
         // Reset active folder to avoid showing a deleted folder
         setActiveFolderId(null);
 
+        // Buat pesan sukses yang informatif
+        let successMessage = `✅ Data berhasil dipulihkan!\n\n`;
+        successMessage += `📁 ${stats?.foldersCount || 0} folder\n`;
+        successMessage += `📌 ${stats?.itemsCount || 0} items`;
+
+        if (stats && (stats.recoveredFolders > 0 || stats.recoveredItems > 0)) {
+          successMessage += `\n\n🔧 Data diperbaiki:\n`;
+          if (stats.recoveredFolders > 0) {
+            successMessage += `• ${stats.recoveredFolders} folder\n`;
+          }
+          if (stats.recoveredItems > 0) {
+            successMessage += `• ${stats.recoveredItems} items`;
+          }
+        }
+
         setBackupStatus({
           type: 'success',
-          message: 'Data berhasil dipulihkan!'
+          message: successMessage
         });
-        setTimeout(() => setBackupStatus(null), 4000);
+        setTimeout(() => setBackupStatus(null), 6000);
       }
     } catch (error) {
       console.error("Import Error:", error);
       setBackupStatus({
         type: 'error',
-        message: 'Gagal restore: ' + (error instanceof Error ? error.message : String(error))
+        message: '❌ Gagal restore: ' + (error instanceof Error ? error.message : String(error))
       });
       setTimeout(() => setBackupStatus(null), 5000);
     } finally {
@@ -371,7 +436,7 @@ const App: React.FC = () => {
 
         {/* Backup Status Notification */}
         {backupStatus && (
-          <div className={`fixed top-4 right-4 z-[200] max-w-sm animate-in slide-in-from-right fade-in ${
+          <div className={`fixed top-4 right-4 z-[200] max-w-md animate-in slide-in-from-right fade-in ${
             backupStatus.type === 'success'
               ? 'bg-green-500 text-white'
               : 'bg-red-500 text-white'
@@ -384,7 +449,7 @@ const App: React.FC = () => {
               )}
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium">{backupStatus.message}</p>
+              <p className="text-sm font-medium whitespace-pre-line">{backupStatus.message}</p>
             </div>
           </div>
         )}
