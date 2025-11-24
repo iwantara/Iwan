@@ -242,17 +242,17 @@ export const themes: Record<string, Theme> = {
       gradientTo: 'to-yellow-400',
       buttonTextColor: 'text-yellow-950',
 
-      pageBackground: 'bg-yellow-500',
-      textColor: 'text-white',
-      subText: 'text-yellow-100',
+      pageBackground: 'bg-yellow-400',
+      textColor: 'text-yellow-950',
+      subText: 'text-yellow-800',
 
       cardBg: 'bg-white',
       cardBorder: 'border-yellow-200',
       cardTextColor: 'text-yellow-950',
       cardSubText: 'text-slate-500',
 
-      blob1: 'bg-yellow-400',
-      blob2: 'bg-orange-400'
+      blob1: 'bg-yellow-300',
+      blob2: 'bg-orange-300'
     }
   },
   lavender: {
@@ -292,17 +292,17 @@ export const themes: Record<string, Theme> = {
       gradientTo: 'to-lime-500',
       buttonTextColor: 'text-lime-950',
 
-      pageBackground: 'bg-lime-500',
-      textColor: 'text-white',
-      subText: 'text-lime-100',
+      pageBackground: 'bg-lime-400',
+      textColor: 'text-lime-950',
+      subText: 'text-lime-800',
 
       cardBg: 'bg-white',
       cardBorder: 'border-lime-200',
       cardTextColor: 'text-lime-950',
       cardSubText: 'text-slate-500',
 
-      blob1: 'bg-lime-400',
-      blob2: 'bg-green-400'
+      blob1: 'bg-lime-300',
+      blob2: 'bg-green-300'
     }
   }
 };
