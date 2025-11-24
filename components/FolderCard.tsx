@@ -127,7 +127,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
 
           {/* Dropdown Menu - Always White for clarity */}
           {showMenu && (
-            <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-slate-200 rounded-2xl shadow-2xl shadow-slate-900/20 z-[100] overflow-hidden animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+            <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-slate-200 rounded-2xl shadow-2xl shadow-slate-900/20 z-[9999] overflow-hidden animate-in fade-in zoom-in-95 duration-100 origin-top-right">
               <div className="p-2 flex flex-col gap-1">
                 <button
                   onClick={startEditing}
@@ -159,7 +159,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
                 <div className="h-px bg-slate-200 my-1 mx-2"></div>
                 <button
                   onClick={handleDelete}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-white bg-red-500 hover:bg-red-600 rounded-xl text-left transition-all shadow-sm hover:shadow-md"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 hover:text-red-700 rounded-xl text-left transition-colors"
                 >
                   <Trash2 className="w-4 h-4" /> Hapus Folder
                 </button>
@@ -170,7 +170,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       </div>
       
       {/* Content */}
-      <div className="relative z-10 space-y-1">
+      <div className="relative z-0 space-y-1">
         {isEditing ? (
           <div className="flex gap-2 items-center">
             <input
