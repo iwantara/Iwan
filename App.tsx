@@ -498,9 +498,9 @@ const App: React.FC = () => {
               onChange={(e) => setNewFolderName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && createFolder()}
             />
-            <button 
+            <button
               onClick={createFolder}
-              className={`text-white px-8 py-3 rounded-[1.5rem] font-bold tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:shadow-none disabled:translate-y-0 ${theme.colors.gradientFrom}`}
+              className={`${theme.colors.buttonTextColor} px-8 py-3 rounded-[1.5rem] font-bold tracking-wide transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:shadow-none disabled:translate-y-0 disabled:cursor-not-allowed ${theme.colors.gradientFrom}`}
               disabled={!newFolderName.trim()}
             >
               Buat
