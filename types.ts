@@ -23,7 +23,7 @@ export interface Folder {
   createdAt: number;
 }
 
-export type ThemeName = 'cosmic' | 'ocean' | 'nature' | 'sunset' | 'monochrome' | 'aurora' | 'mint' | 'cherry' | 'sunshine' | 'royal';
+export type ThemeName = 'cosmic' | 'ocean' | 'nature' | 'sunset' | 'monochrome' | 'aurora' | 'mint' | 'cherry' | 'sunshine' | 'royal' | 'lavender' | 'lime';
 
 export interface Theme {
   name: ThemeName;

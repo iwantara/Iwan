@@ -235,24 +235,74 @@ export const themes: Record<string, Theme> = {
       primary: 'yellow',
       secondary: 'orange',
       accent: 'text-yellow-700',
-      
-      // Kuning agak gelap sedikit agar beda dengan background putih kartu, 
+
+      // Kuning agak gelap sedikit agar beda dengan background putih kartu,
       // tapi teksnya HARUS GELAP (coklat tua) agar terbaca.
-      gradientFrom: 'bg-yellow-400', 
+      gradientFrom: 'bg-yellow-400',
       gradientTo: 'to-yellow-400',
-      buttonTextColor: 'text-yellow-950', 
-      
+      buttonTextColor: 'text-yellow-950',
+
       pageBackground: 'bg-yellow-500',
       textColor: 'text-white',
       subText: 'text-yellow-100',
-      
+
       cardBg: 'bg-white',
       cardBorder: 'border-yellow-200',
       cardTextColor: 'text-yellow-950',
       cardSubText: 'text-slate-500',
-      
+
       blob1: 'bg-yellow-400',
       blob2: 'bg-orange-400'
+    }
+  },
+  lavender: {
+    name: 'lavender',
+    label: 'Lavender Dream',
+    colors: {
+      primary: 'purple',
+      secondary: 'violet',
+      accent: 'text-purple-600',
+
+      gradientFrom: 'bg-purple-600',
+      gradientTo: 'to-purple-600',
+      buttonTextColor: 'text-white',
+
+      pageBackground: 'bg-purple-500',
+      textColor: 'text-white',
+      subText: 'text-purple-100',
+
+      cardBg: 'bg-white',
+      cardBorder: 'border-purple-200',
+      cardTextColor: 'text-purple-950',
+      cardSubText: 'text-slate-500',
+
+      blob1: 'bg-purple-400',
+      blob2: 'bg-violet-400'
+    }
+  },
+  lime: {
+    name: 'lime',
+    label: 'Electric Lime',
+    colors: {
+      primary: 'lime',
+      secondary: 'green',
+      accent: 'text-lime-700',
+
+      gradientFrom: 'bg-lime-500',
+      gradientTo: 'to-lime-500',
+      buttonTextColor: 'text-lime-950',
+
+      pageBackground: 'bg-lime-500',
+      textColor: 'text-white',
+      subText: 'text-lime-100',
+
+      cardBg: 'bg-white',
+      cardBorder: 'border-lime-200',
+      cardTextColor: 'text-lime-950',
+      cardSubText: 'text-slate-500',
+
+      blob1: 'bg-lime-400',
+      blob2: 'bg-green-400'
     }
   }
 };

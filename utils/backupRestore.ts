@@ -79,7 +79,7 @@ export function validateBackupData(data: any): { valid: boolean; error?: string;
     }
 
     // 5. Sanitasi Theme
-    const validThemes = ['cosmic', 'ocean', 'nature', 'sunset', 'monochrome', 'aurora', 'mint', 'cherry', 'sunshine', 'royal'];
+    const validThemes = ['cosmic', 'ocean', 'nature', 'sunset', 'monochrome', 'aurora', 'mint', 'cherry', 'sunshine', 'royal', 'lavender', 'lime'];
     let theme: ThemeName = 'monochrome';
     if (data.currentTheme && validThemes.includes(data.currentTheme)) {
       theme = data.currentTheme as ThemeName;
