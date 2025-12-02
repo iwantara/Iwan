@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Editor - Format Ulang PDF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .upload-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .file-name {
+            color: white;
+            margin-left: 15px;
+            font-weight: 500;
+        }
+
+        .controls {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .page-info {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #333;
+            border-left: 4px solid #10b981;
+        }
+
+        .info-box strong {
+            color: #10b981;
+        }
+
+        .pdf-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .page-wrapper {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .page-number {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .page-size-info {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .editable-content {
+            min-height: 400px;
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            font-family: 'Times New Roman', Times, serif;
+            background: #fafafa;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .editable-content:focus {
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .editable-content:empty:before {
+            content: 'Klik di sini untuk edit teks...';
+            color: #999;
+        }
+
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .warning {
+            color: #f59e0b;
+        }
+
+        .error {
+            color: #ef4444;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .page-wrapper {
+                padding: 15px;
+            }
+
+            .editable-content {
+                padding: 15px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📄 PDF Editor</h1>
+            <p>Format ulang PDF - Edit langsung, atur baris antar halaman</p>
+        </header>
+
+        <div class="upload-section">
+            <input type="file" id="pdfUpload" accept=".pdf" hidden>
+            <button id="uploadBtn" class="btn btn-primary">
+                📤 Upload PDF
+            </button>
+            <span id="fileName" class="file-name"></span>
+        </div>
+
+        <div id="controls" class="controls" style="display: none;">
+            <button id="downloadBtn" class="btn btn-success">
+                💾 Download PDF
+            </button>
+            <span id="pageInfo" class="page-info"></span>
+        </div>
+
+        <div class="info-box" id="infoBox" style="display: none;">
+            💡 <strong>Cara Pakai:</strong> Setelah upload, semua halaman langsung bisa diedit! Klik di kotak teks mana saja untuk mulai edit. Anda bisa tambah baris (Enter), cut, paste, atau pindahkan teks antar halaman agar rapi. Setiap halaman punya kotak editnya sendiri.
+        </div>
+
+        <div id="pdfContainer" class="pdf-container">
+            <!-- PDF pages will be rendered here -->
+        </div>
+
+        <div id="loadingIndicator" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Memuat PDF...</p>
+        </div>
+    </div>
+
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- pdf-lib -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+    <script>
+        // Setup PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // Global variables
+        let pdfDoc = null;
+        let pdfBytes = null;
+        let pageContents = [];
+        const CHARS_PER_PAGE = 2000; // Approximate characters per page
+
+        // DOM elements
+        const uploadBtn = document.getElementById('uploadBtn');
+        const pdfUpload = document.getElementById('pdfUpload');
+        const fileName = document.getElementById('fileName');
+        const pdfContainer = document.getElementById('pdfContainer');
+        const controls = document.getElementById('controls');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const pageInfo = document.getElementById('pageInfo');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const infoBox = document.getElementById('infoBox');
+
+        // Event listeners
+        uploadBtn.addEventListener('click', () => pdfUpload.click());
+        pdfUpload.addEventListener('change', handleFileUpload);
+        downloadBtn.addEventListener('click', downloadEditedPDF);
+
+        // Handle file upload
+        async function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file || file.type !== 'application/pdf') {
+                alert('Silakan pilih file PDF yang valid!');
+                return;
+            }
+
+            showLoading(true);
+            fileName.textContent = file.name;
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                pdfBytes = new Uint8Array(arrayBuffer);
+
+                const loadingTask = pdfjsLib.getDocument({ data: pdfBytes });
+                pdfDoc = await loadingTask.promise;
+
+                await extractAndDisplayPages();
+
+                controls.style.display = 'flex';
+                infoBox.style.display = 'block';
+                pageInfo.textContent = `Total: ${pdfDoc.numPages} halaman`;
+
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                alert('Gagal memuat PDF. Silakan coba lagi.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Extract text from all pages and display
+        async function extractAndDisplayPages() {
+            pdfContainer.innerHTML = '';
+            pageContents = [];
+
+            for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                const page = await pdfDoc.getPage(pageNum);
+                const textContent = await page.getTextContent();
+
+                // Extract text
+                let pageText = textContent.items.map(item => item.str).join(' ');
+                pageText = pageText.replace(/\s+/g, ' ').trim();
+
+                pageContents.push(pageText);
+
+                // Create page wrapper
+                const pageWrapper = document.createElement('div');
+                pageWrapper.className = 'page-wrapper';
+
+                // Page header
+                const pageHeader = document.createElement('div');
+                pageHeader.className = 'page-header';
+
+                const pageNumSpan = document.createElement('span');
+                pageNumSpan.className = 'page-number';
+                pageNumSpan.textContent = `Halaman ${pageNum}`;
+
+                const pageSizeInfo = document.createElement('span');
+                pageSizeInfo.className = 'page-size-info';
+                pageSizeInfo.textContent = `~${CHARS_PER_PAGE} karakter per halaman`;
+
+                pageHeader.appendChild(pageNumSpan);
+                pageHeader.appendChild(pageSizeInfo);
+
+                // Editable content
+                const editableDiv = document.createElement('div');
+                editableDiv.className = 'editable-content';
+                editableDiv.contentEditable = 'true';
+                editableDiv.textContent = pageText;
+                editableDiv.setAttribute('data-page', pageNum);
+
+                // Character count
+                const charCount = document.createElement('div');
+                charCount.className = 'char-count';
+                charCount.id = `char-count-${pageNum}`;
+                updateCharCount(editableDiv, charCount);
+
+                // Update char count on input
+                editableDiv.addEventListener('input', () => {
+                    updateCharCount(editableDiv, charCount);
+                });
+
+                pageWrapper.appendChild(pageHeader);
+                pageWrapper.appendChild(editableDiv);
+                pageWrapper.appendChild(charCount);
+                pdfContainer.appendChild(pageWrapper);
+            }
+        }
+
+        // Update character count
+        function updateCharCount(editableDiv, charCountDiv) {
+            const text = editableDiv.textContent;
+            const charCount = text.length;
+            let className = '';
+            let message = `${charCount} karakter`;
+
+            if (charCount > CHARS_PER_PAGE * 1.2) {
+                className = 'error';
+                message += ' ⚠️ Terlalu panjang! Pindahkan sebagian ke halaman berikutnya';
+            } else if (charCount > CHARS_PER_PAGE) {
+                className = 'warning';
+                message += ' ⚠️ Mendekati batas';
+            }
+
+            charCountDiv.textContent = message;
+            charCountDiv.className = 'char-count ' + className;
+        }
+
+        // Download edited PDF
+        async function downloadEditedPDF() {
+            if (!pdfBytes) {
+                alert('Tidak ada PDF yang dimuat!');
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                // Create new PDF document
+                const pdfDoc = await PDFLib.PDFDocument.create();
+                const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+
+                // Get all edited content
+                const editableDivs = document.querySelectorAll('.editable-content');
+
+                editableDivs.forEach((div) => {
+                    const text = div.textContent.trim();
+                    if (!text) return;
+
+                    // Add new page
+                    const page = pdfDoc.addPage([595, 842]); // A4 size
+                    const { width, height } = page.getSize();
+
+                    const fontSize = 12;
+                    const lineHeight = fontSize + 4;
+                    const margin = 50;
+                    const maxWidth = width - (margin * 2);
+
+                    // Split text into lines
+                    const lines = wrapText(text, font, fontSize, maxWidth);
+
+                    // Draw text
+                    let y = height - margin;
+
+                    for (const line of lines) {
+                        if (y < margin) break; // Stop if reaching bottom
+
+                        page.drawText(line, {
+                            x: margin,
+                            y: y,
+                            size: fontSize,
+                            font: font,
+                            color: PDFLib.rgb(0, 0, 0),
+                            lineHeight: lineHeight
+                        });
+
+                        y -= lineHeight;
+                    }
+                });
+
+                // Save PDF
+                const pdfBytesOutput = await pdfDoc.save();
+
+                // Download
+                const blob = new Blob([pdfBytesOutput], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'edited_' + (fileName.textContent || 'document.pdf');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                alert('PDF berhasil didownload!');
+
+            } catch (error) {
+                console.error('Error saving PDF:', error);
+                alert('Gagal menyimpan PDF. Silakan coba lagi.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Wrap text to fit width
+        function wrapText(text, font, fontSize, maxWidth) {
+            const paragraphs = text.split('\n');
+            const lines = [];
+
+            paragraphs.forEach((paragraph) => {
+                if (!paragraph.trim()) {
+                    lines.push('');
+                    return;
+                }
+
+                const words = paragraph.split(' ');
+                let currentLine = '';
+
+                for (const word of words) {
+                    const testLine = currentLine + (currentLine ? ' ' : '') + word;
+                    const width = font.widthOfTextAtSize(testLine, fontSize);
+
+                    if (width > maxWidth && currentLine) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine = testLine;
+                    }
+                }
+
+                if (currentLine) {
+                    lines.push(currentLine);
+                }
+            });
+
+            return lines;
+        }
+
+        // Show/hide loading
+        function showLoading(show) {
+            loadingIndicator.style.display = show ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
