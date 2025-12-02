@@ -1,30 +1,48 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Random Interest Picker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0"
-  }
-}
-</script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Editor - Edit PDF Sederhana</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-  <body class="bg-slate-50 text-slate-900 antialiased selection:bg-indigo-100 selection:text-indigo-700">
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+<body>
+    <div class="container">
+        <header>
+            <h1>📄 PDF Editor</h1>
+            <p>Upload, edit, dan download PDF dengan format tetap terjaga</p>
+        </header>
+
+        <div class="upload-section">
+            <input type="file" id="pdfUpload" accept=".pdf" hidden>
+            <button id="uploadBtn" class="btn btn-primary">
+                📤 Upload PDF
+            </button>
+            <span id="fileName" class="file-name"></span>
+        </div>
+
+        <div id="controls" class="controls" style="display: none;">
+            <button id="downloadBtn" class="btn btn-success">
+                💾 Download PDF
+            </button>
+            <span id="pageInfo" class="page-info"></span>
+        </div>
+
+        <div id="pdfContainer" class="pdf-container">
+            <!-- PDF pages will be rendered here -->
+        </div>
+
+        <div id="loadingIndicator" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Memuat PDF...</p>
+        </div>
+    </div>
+
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- pdf-lib -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <!-- Main script -->
+    <script src="app.js"></script>
+</body>
 </html>
